@@ -1,6 +1,6 @@
 const express = require('express');
 
-module.exports = (app, Model) => {
+module.exports = (app, Model, pagination) => {
     const router = express.Router();
 
     function prepareResp (success, message, data) {
@@ -10,14 +10,38 @@ module.exports = (app, Model) => {
             data: data,
         }
     }
-
-    router.get('/', (req, res, next) => {
-        Model.find((err, _entity) => {
+    router.get('/count_all', (req, res, next) => {
+        Model.count((err, _entity) => {
             if (err) {
                 return res.status(400).json(prepareResp(0, 'Error!', err));
             }
-            res.status(200).json(prepareResp(1, 'Listed all', _entity));
-        });
+            res.status(200).json(prepareResp(1, 'Total number', _entity));
+        })
+    });
+    router.get('/', (req, res, next) => {
+        if(pagination){
+            const pageOptions = {
+                page: req.query.page || 0,
+                limit: req.query.limit || 10
+            };
+            Model.find()
+                .skip(pageOptions.page*pageOptions.limit)
+                .limit(pageOptions.limit)
+                .exec(function (err, data) {
+                    if(err) {
+                        return res.status(500).json(prepareResp(0, 'Error!', err));
+                    }
+                    res.status(200).json(prepareResp(1, 'Listed '+ pageOptions.limit, data));
+                })
+        } else {
+            Model.find((err, _entity) => {
+                if (err) {
+                    return res.status(400).json(prepareResp(0, 'Error!', err));
+                }
+                res.status(200).json(prepareResp(1, 'Listed all', _entity));
+            });
+        }
+
     });
 
     router.get('/:id', (req, res, next) => {

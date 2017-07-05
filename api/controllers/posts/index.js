@@ -4,6 +4,7 @@ const crudRouter = require('../../routes/CRUD'),
       mongoose = require('mongoose');
 
 module.exports =  (app) => {
-    const Post = mongoose.model('Post');
-    app.use('/api/posts', crudRouter(app, Post));
+    const Post_model = mongoose.model('Post');
+    app.use('/api/posts', crudRouter(app, Post_model, true));
+
 };

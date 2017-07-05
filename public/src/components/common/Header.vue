@@ -32,9 +32,11 @@
                 </v-list-item>
             </v-list>
         </v-navigation-drawer>
-        <v-toolbar fixed light>
-            <v-toolbar-side-icon light @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
-            <v-toolbar-title>{{title}}</v-toolbar-title>
+        <v-toolbar fixed dark class="primary">
+            <div class="toolbar__content">
+                <v-toolbar-side-icon @click.native.stop="drawer = !drawer" class="white--text"></v-toolbar-side-icon>
+                <v-toolbar-title class="white--text">{{title}}</v-toolbar-title>
+            </div>
         </v-toolbar>
     </header>
 </template>
@@ -60,3 +62,8 @@
         }
     }
 </script>
+<style>
+    header{
+        padding-bottom: 80px;
+    }
+</style>

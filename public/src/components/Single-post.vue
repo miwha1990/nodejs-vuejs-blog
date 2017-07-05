@@ -1,9 +1,9 @@
 <template>
-    <main>
+    <div>
         <v-container>
             <v-layout row wrap >
                 <v-flex xs1 offset-xs1>
-                        {{postData.Created_date}}
+                    {{postData.date}}
                 </v-flex>
                 <v-flex xs10>
                     <h3>{{postData.title}}</h3>
@@ -12,7 +12,7 @@
             </v-layout>
         </v-container>
         <app-comments-block></app-comments-block>
-    </main>
+    </div>
 </template>
 <script>
     import CommentsBlock from './common/Comments.vue';
@@ -39,7 +39,4 @@
     }
 </script>
 <style>
-    main{
-        padding-top:100px;
-    }
 </style>

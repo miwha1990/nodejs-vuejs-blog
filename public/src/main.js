@@ -5,8 +5,10 @@ import store from './store';
 import Vuetify from 'vuetify';
 import VueResource from 'vue-resource';
 
-Vue.use(Vuetify);
-Vue.use(VueResource);
+Vue
+    .use(Vuetify)
+    .use(VueResource);
+
 
 new Vue({
   el: '#app',

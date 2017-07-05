@@ -8,7 +8,8 @@ export default new Vuex.Store({
         title: '',
         posts:[],
         postId:'',
-        comments:''
+        comments:'',
+        route: ''
      },
      mutations: {
          CHANGE_TITLE(state, payload) {
@@ -25,6 +26,9 @@ export default new Vuex.Store({
          },
          ADD_COMMENT(state, comment) {
              state.comments.unshift(comment.body.data);
+         },
+         SET_ROUTE(state, route) {
+             state.route = route;
          }
      },
      getters: {
@@ -39,16 +43,34 @@ export default new Vuex.Store({
          },
          getPostId(state) {
              return state.postId;
+         },
+         getRoute(state) {
+             return state.route;
          }
      },
      actions: {
-        fetchPosts(context, url) {
+         fetchPosts(context, url) {
             Vue.http.get(url)
                 .then((response)=>{
-                    context.commit("SET_POSTS", response) //response is the new friend
+
+                    if(Array.isArray(response.body.data)){
+                        response.body.data.map(el => {
+
+                            Vue.http.get('http://localhost:8000/api/comments/' + el._id)
+                                .then((comments)=>{
+                                    el.comments = comments.body.data.length;
+
+                                    // TODO: Remove that from cycle
+                                    context.commit("SET_POSTS", response)
+                                })
+                                .catch((er) => console.log(er));
+                        });
+                    } else {
+                        context.commit("SET_POSTS", response)
+                    }
                 })
                 .catch((err) => console.log(err));
-        },
+         },
          fetchComments(context, url) {
              Vue.http.get(url)
                  .then((response)=>{
