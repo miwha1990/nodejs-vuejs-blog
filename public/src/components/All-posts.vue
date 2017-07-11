@@ -8,11 +8,12 @@
                 <v-card v-else class="post_card"   v-for="item in posts" :key="item._id" >
                     <v-layout row wrap>
                         <v-flex xs12 md4 >
-                            <div class="article_img" v-if="item.imageUrl !== 'null'">
+
+                            <div class="article_img" v-if="item.imageUrl != null">
                                 <img v-bind:src="item.imageUrl">
                             </div>
                             <div class="article_img" v-else>
-                                <img src="http://lorempixel.com/380/295/">
+                                <img src="http://lorempixel.com/380/290/">
                             </div>
                             <v-chip class="white" label>{{item.category}}</v-chip>
                         </v-flex>
