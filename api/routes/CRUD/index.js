@@ -11,20 +11,36 @@ module.exports = (app, Model, pagination) => {
         }
     }
     router.get('/count_all', (req, res, next) => {
-        Model.count((err, _entity) => {
-            if (err) {
-                return res.status(400).json(prepareResp(0, 'Error!', err));
-            }
-            res.status(200).json(prepareResp(1, 'Total number', _entity));
-        })
+        const category = req.query.category;
+        if(category) {
+            Model
+                .find({ category: category })
+                .count((err, _entity) => {
+                    if (err) {
+                        return res.status(400).json(prepareResp(0, 'Error!', err));
+                    }
+                    res.status(200).json(prepareResp(1, 'Total number by category', _entity));
+                })
+        } else {
+            Model
+                .count((err, _entity) => {
+                    if (err) {
+                        return res.status(400).json(prepareResp(0, 'Error!', err));
+                    }
+                    res.status(200).json(prepareResp(1, 'Total number', _entity));
+                })
+        }
+
     });
     router.get('/', (req, res, next) => {
         if(pagination){
             const pageOptions = {
                 page: req.query.page || 0,
-                limit: req.query.limit || 10
+                limit: req.query.limit || 10,
+                category: req.query.category || { $gt: [] }
             };
-            Model.find()
+            Model
+                .find({ category: pageOptions.category })
                 .skip(pageOptions.page*pageOptions.limit)
                 .limit(pageOptions.limit)
                 .exec(function (err, data) {

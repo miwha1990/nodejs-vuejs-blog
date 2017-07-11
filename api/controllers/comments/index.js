@@ -27,7 +27,7 @@ exports.count_all = (req, res) => {
         if (err) {
             return res.status(400).json(prepareResp(0, 'Error!', err));
         }
-        res.status(200).json(prepareResp(1, 'Listed comments for the post', _entity.reverse()));
+        res.status(200).json(prepareResp(1, 'Total comments for the post', _entity));
     });
 };
 

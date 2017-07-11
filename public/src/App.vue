@@ -2,7 +2,7 @@
   <v-app id="main">
     <app-header></app-header>
     <app-breadcrums></app-breadcrums>
-    <router-view></router-view>
+    <router-view :key="$route.fullPath"></router-view>
   </v-app>
 </template>
 
@@ -10,11 +10,11 @@
   import Header from './components/common/Header.vue';
   import Breadcrumbs from './components/common/Breadcrumbs.vue';
   export default {
-    name: 'main',
-    components: {
+      name: 'main',
+      components: {
         appHeader: Header,
         appBreadcrums: Breadcrumbs
-    },
+      },
       created() {
         this.$store.commit("SET_ROUTE", this.$route);
       }
@@ -27,6 +27,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: #2c3e50;
+    background: rgba(0,0,0,0.07);
   }
 
   .container{

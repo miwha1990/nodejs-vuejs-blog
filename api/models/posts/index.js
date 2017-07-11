@@ -27,7 +27,6 @@ const PostsSchema = new Schema({
     },
     imageUrl: {
         type: String,
-        default: 'http://lorempixel.com/300/300/'
     },
     status: {
         type: [{

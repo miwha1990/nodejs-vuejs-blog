@@ -1,14 +1,19 @@
 <template>
     <v-container>
-        <v-layout row wrap  v-for="item in posts" :key="item._id" class="post_list">
-            <v-flex xs12 md10 offset-md1>
-                <v-card>
+        <v-layout row wrapclass="post_list">
+            <v-flex xs12 md7 offset-md1>
+                <div class="no_posts" v-if="!posts.length">
+                    <h4 class="deep-orange--text text--lighten-2 text-xs-center">Sorry! No posts yet!</h4>
+                </div>
+                <v-card v-else class="post_card"   v-for="item in posts" :key="item._id" >
                     <v-layout row wrap>
                         <v-flex xs12 md4 >
-                            <div class="article_img">
+                            <div class="article_img" v-if="item.imageUrl !== 'null'">
                                 <img v-bind:src="item.imageUrl">
                             </div>
-
+                            <div class="article_img" v-else>
+                                <img src="http://lorempixel.com/380/295/">
+                            </div>
                             <v-chip class="white" label>{{item.category}}</v-chip>
                         </v-flex>
                         <v-flex xs12 md8 >
@@ -22,7 +27,8 @@
                                         <v-icon >date_range</v-icon> {{item.date}}
                                     </v-chip>
                                     <v-chip outline class="blue blue--text">
-                                        <v-icon >forum</v-icon>&nbsp;<div v-html="item.comments?item.comments.toString():''"></div>&nbsp;comments
+
+                                        <v-icon >forum</v-icon>&nbsp;<div v-html="item.comments?item.comments.toString():'0'"></div>&nbsp;comments
                                     </v-chip>
                                 </p>
                                 <p>
@@ -38,21 +44,44 @@
                     </v-layout>
                 </v-card>
             </v-flex>
+            <v-flex md3 class="sidebar">
+                <sidebar></sidebar>
+            </v-flex>
         </v-layout>
-        <app-pagination :total="totalItems" :limit="postPerPage" :page="pageIndex" @update:page="val => pageIndex = val" v-on:updatePageIndex="changePage"></app-pagination>
+        <app-pagination :limit="postPerPage" :page="pageIndex" v-on:updatePageIndex="changePage"></app-pagination>
         <app-modal></app-modal>
     </v-container>
 </template>
 <script>
     import pagination from './common/Pagination.vue';
+    import Sidebar from './common/Sidebar.vue';
     import modal from './common/Modal-add-post.vue';
     export default {
         data() {
             return {
-                totalItems:0,
                 pageIndex:0,
                 postPerPage:4,
             }
+        },
+        beforeRouteEnter (to, from, next) {
+            const category = to.query.category;
+            next(vm => {
+                if(category === 'All' || !category){
+                    vm.fetchData();
+                } else {vm.fetchData(category); }
+            })
+
+        },
+        beforeRouteUpdate (to, from, next) {
+            const category = to.query.category;
+            this.pageIndex = 0;
+            if(category === 'All'){
+                this.fetchData();
+            } else {
+                this.fetchData(category);
+            }
+            next();
+
         },
         computed: {
             posts() {
@@ -62,42 +91,57 @@
         methods: {
             changePage(e) {
                 clearTimeout(timeout);
-                this.pageIndex = e;
+                this.pageIndex = e-1;
                 const timeout = setTimeout(()=>{
-                    this.$store.dispatch('fetchPosts', `http://localhost:8000/api/posts?page=${this.pageIndex}&limit=${this.postPerPage}`);
+                    const cat = this.$route.query.category;
+                    if(cat && cat !== 'All'){
+                        this.fetchData(cat);
+                    } else {
+                        this.fetchData();
+                    }
                 },500);
+            },
+            fetchData (cat) {
+                const category = cat ? '&category='+cat : '';
+                const category_count = cat ? '?category='+cat : '';
+                const url = `http://localhost:8000/api/posts?page=${this.pageIndex}&limit=${this.postPerPage}${category}`;
+                console.log(url);
+
+                this.$http.get(
+                    'http://localhost:8000/api/posts/count_all'+category_count
+                ).then((res) => {
+                    this.$store.commit('SET_TOTAL_ITEMS', res.body.data);
+                });
+                this.$store.dispatch('fetchPosts', url);
             }
         },
         mounted() {
             this.$store.commit('CHANGE_TITLE', 'Posts');
-            this.$store.dispatch('fetchPosts', `http://localhost:8000/api/posts?page=${this.pageIndex}&limit=${this.postPerPage}`);
-            this.$http.get(
-                'http://localhost:8000/api/posts/count_all'
-            ).then((res) => {
-                this.totalItems = res.body.data;
-            });
         },
         components: {
             appPagination : pagination,
-            appModal: modal
+            appModal: modal,
+            sidebar: Sidebar
         }
     }
 </script>
 <style >
+    h4{
+        cursor: pointer;
+    }
     #add_button{
         position: fixed;
         right: 5%;
         bottom:5%
     }
-    .post_list{
+    .post_card{
         margin-bottom: 30px;
-    }
-    h4 {
-        cursor: pointer;
-        color: orange;
     }
     a{
         text-decoration: none;
+    }
+    .sidebar{
+        margin-left: 50px;
     }
 
     .article_img{

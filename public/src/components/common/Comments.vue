@@ -1,11 +1,7 @@
 <template>
     <section>
-        <v-layout row>
-            <v-flex xs12 sm6 offset-sm3>
-                <app-comment-form></app-comment-form>
-                <app-comment-list></app-comment-list>
-            </v-flex>
-        </v-layout>
+        <app-comment-form></app-comment-form>
+        <app-comment-list></app-comment-list>
     </section>
 </template>
 <script>
@@ -18,3 +14,8 @@
         }
     }
 </script>
+<style>
+.card{
+    box-shadow: 0 3px 10px rgba(0,0,0,.23), 0 3px 10px rgba(0,0,0,.16);
+}
+</style>

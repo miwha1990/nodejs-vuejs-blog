@@ -35,18 +35,26 @@
         },
         methods: {
             onInfinite() {
-                this.$http.get(
-                    'http://localhost:8000/api/comments/'+this.$store.getters.getPostId+'/'+(++this.page)
-                ).then((res) => {
-                    setTimeout(() => {
-                        if (res.body.data.length) {
-                            this.comments.push(...res.body.data);
-                            this.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded');
-                        } else {
-                            this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
-                        }
-                    },500);
-                });
+                console.log(this.comments.length);
+                if(this.comments.length > 4) {
+                    this.$http.get(
+                        'http://localhost:8000/api/comments/'+this.$store.getters.getPostId+'/'+(++this.page)
+                    ).then((res) => {
+                        setTimeout(() => {
+                            if (res.body.data.length) {
+                                this.comments.push(...res.body.data);
+                                this.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded');
+                            } else {
+                                if(this.comments.length) {
+                                    this.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded');
+                                    this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
+                                } else {
+                                    this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
+                                }
+                            }
+                        },500);
+                    });
+                }
             },
         },
         mounted() {

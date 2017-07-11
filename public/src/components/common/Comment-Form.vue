@@ -12,7 +12,7 @@
                             <v-text-field multi-line v-model="form.text" label="Comment"></v-text-field>
                         </v-flex>
                         <div class="text-xs-center">
-                            <button class="btn btn--light btn--raised btn--round primary" v-on:click="submitData">Submit Comment</button>
+                            <button class="btn btn--light btn--raised btn--round deep-orange lighten-2 white--text" v-on:click="submitData">Submit</button>
                         </div>
 
                     </v-layout>
