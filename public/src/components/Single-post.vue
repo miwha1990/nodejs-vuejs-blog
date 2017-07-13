@@ -33,7 +33,7 @@
 
                     <app-comments-block></app-comments-block>
                 </v-flex>
-                <v-flex md3 class="sidebar">
+                <v-flex md3 class="sidebar hidden-sm-and-down">
                     <sidebar></sidebar>
                 </v-flex>
             </v-layout>
@@ -99,6 +99,9 @@
         font-size: 1.5em;
         text-indent: 40px;
         padding-bottom: 20px;
+    }
+    .post_content p{
+        padding: 10px 10px 10px 20px;
     }
     .content_part{
         padding-bottom: 20px;

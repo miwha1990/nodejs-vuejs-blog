@@ -10,14 +10,14 @@ export default new Vuex.Store({
         postId:'',
         comments:'',
         route: '',
-        totalItems:0
+        totalItems:0,
+        login:false
      },
      mutations: {
          CHANGE_TITLE(state, payload) {
              state.title = payload;
          },
          SET_POSTS(state, response) {
-             console.log('fired');
              state.posts = response.body.data;
          },
          SET_COMMENTS(state, response) {
@@ -37,6 +37,9 @@ export default new Vuex.Store({
          },
          SET_TOTAL_ITEMS(state, total) {
              state.totalItems = total;
+         },
+         CHANGE_LOGIN_STATE(state, switcher) {
+             state.login = switcher;
          }
      },
      getters: {
@@ -57,6 +60,9 @@ export default new Vuex.Store({
          },
          getTotalItems(state) {
              return state.totalItems;
+         },
+         getLogin(state) {
+             return state.login
          }
      },
      actions: {
@@ -88,8 +94,41 @@ export default new Vuex.Store({
              Vue.http.post(data.url, JSON.stringify(data.data))
                  .then((response)=>context.commit("ADD_COMMENT", response))
                  .catch((err) => console.log(err));
-         }
+         },
 
+         login(context, data ){
+             return Vue.http.post(data.url, JSON.stringify(data.data))
+                 .then((response)=>{
+                     Vue.cookie.set('token', response.data.data);
+                     return response.data;
+                 })
+                 .catch((err) => {return err});
+         },
+         logout(context) {
+             Vue.cookie.delete('token');
+             context.commit("CHANGE_LOGIN_STATE", false);
+         },
+         register(context, data) {
+             return Vue.http.post(data.url, JSON.stringify(data.data))
+                 .then((response)=>{
+                     return response.data;
+                 })
+                 .catch((err) => {return err});
+         },
+         authenticate(context) {
+             const token = Vue.cookie.get('token');
+             if(token) {
+                 Vue.http.get('http://localhost:8000/me/', {
+                     headers: {
+                         Authorization: `JWT ${token}`
+                     }})
+                     .then((response)=>{
+                         context.commit("CHANGE_LOGIN_STATE", response.body.data.firstName);
+                         return response.body;
+                     })
+                     .catch(err => err);
+             }
+         }
      }
 });
 

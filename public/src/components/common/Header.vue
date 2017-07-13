@@ -1,69 +1,205 @@
 <template>
     <header>
+        <v-container>
+            <v-toolbar fixed dark class="primary">
+                <div class="toolbar__content">
+                    <v-toolbar-side-icon @click.native.stop="drawer = !drawer" class="white--text hidden-md-and-up"></v-toolbar-side-icon>
+                    <v-toolbar-title class="white--text">{{title}}</v-toolbar-title>
+                    <v-toolbar-items class="hidden-sm-and-down">
+                        <v-btn flat v-for="item in items" :key="item">
+                            <v-menu :nudge-width="100" v-if="item.children">
+                                <v-list-tile-title slot="activator">
+                                    <span style="vertical-align: middle" class="white--text">{{item.text}}</span>
+                                    <v-icon dark  class="white--text">arrow_drop_down</v-icon>
+                                </v-list-tile-title>
+                                <v-list>
+                                    <v-list-tile v-for="im in item.children" :key="im">
+                                        <router-link :to="`/posts\?category=`+ im.text">
+                                            <v-list-tile-title v-html="im.text"></v-list-tile-title>
+                                        </router-link>
+                                    </v-list-tile>
+                                </v-list>
+                            </v-menu>
+                            <router-link  class="white--text" :to="{name: item.name}" v-else >
+                                {{item.text}}
+                            </router-link>
+                        </v-btn>
+
+                    </v-toolbar-items>
+                    <v-spacer></v-spacer>
+                    <v-toolbar-items  class="hidden-sm-and-down">
+                        <v-btn flat v-if="login">
+                            <v-menu :nudge-width="100">
+                                <span slot="activator">
+                                    <span style="vertical-align: middle" class="white--text">Hello, {{login}}!</span>
+                                    <v-icon dark  class="white--text">arrow_drop_down</v-icon>
+                                </span>
+                                <v-list>
+                                    <v-list-tile>
+                                        <v-list-tile-title v-on:click="logout"><v-icon>lock_open</v-icon>&nbsp;Logout</v-list-tile-title>
+                                    </v-list-tile>
+                                </v-list>
+                            </v-menu>
+                        </v-btn>
+                        <v-btn class="deep-orange lighten-2 white--text" @click.native.stop="modal = !modal;" flat v-else>
+                            <v-icon class="white--text">input</v-icon>&nbsp;&nbsp;&nbsp;
+                            <login-modal :modal="modal"></login-modal>
+                        </v-btn>
+                    </v-toolbar-items>
+                </div>
+            </v-toolbar>
+        </v-container>
         <v-navigation-drawer temporary v-model="drawer" :mini-variant.sync="mini" dark>
-            <v-list class="pa-0">
-                <v-list-item>
-                    <v-list-tile avatar tag="div">
-                        <v-list-tile-avatar>
-                            <img src="https://randomuser.me/api/portraits/men/85.jpg" />
-                        </v-list-tile-avatar>
-                        <v-list-tile-content>
-                            <v-list-tile-title>John Leider</v-list-tile-title>
-                        </v-list-tile-content>
+            <v-list class="pa-10">
+                <v-layout row wrap>
+                    <v-flex xs10>
+                        <v-list-item v-if="login">
+                            <v-list-tile avatar tag="div">
+                                <v-list-tile-content>
+                                    <v-menu :nudge-width="100">
+                                        <span slot="activator">
+                                            <span style="vertical-align: middle">Hello, {{login}}!</span>
+                                            <v-icon dark>arrow_drop_down</v-icon>
+                                        </span>
+                                        <v-list>
+                                            <v-list-tile>
+                                                <v-icon>lock_open</v-icon>&nbsp;<v-list-tile-title v-on:click="logout">Logout</v-list-tile-title>
+                                            </v-list-tile>
+                                        </v-list>
+                                    </v-menu>
+                                </v-list-tile-content>
+                            </v-list-tile>
+                        </v-list-item>
+                        <v-list-item v-else>
+                            <v-list-tile avatar @click.native.stop="modal2 = true" tag="div">
+                                <v-list-tile-action>
+                                    <v-icon>input</v-icon>
+                                </v-list-tile-action>
+                                <v-list-tile-content>
+                                    <v-list-tile-title>
+                                        <login-modal :modal="modal2"></login-modal>
+                                    </v-list-tile-title>
+                                </v-list-tile-content>
+                            </v-list-tile>
+                        </v-list-item>
+                    </v-flex>
+                    <v-flex xs2>
                         <v-list-tile-action>
                             <v-btn icon dark @click.native.stop="mini = !mini">
                                 <v-icon>chevron_left</v-icon>
                             </v-btn>
                         </v-list-tile-action>
-                    </v-list-tile>
-                </v-list-item>
+                    </v-flex>
+                </v-layout>
+
             </v-list>
-            <v-list class="pt-0" dense>
-                <v-divider></v-divider>
-                <v-list-item v-for="item in items" :key="item">
-                    <v-list-tile>
+            <v-list dense>
+                <template v-for="(item, i) in items">
+                    <v-list-group v-if="item.children" v-model="item.model" no-action>
+                        <v-list-tile slot="item">
+                            <v-list-tile-action>
+                                <v-icon>{{ item.model ? item.icon : item['icon-alt'] }}</v-icon>
+                            </v-list-tile-action>
+                            <v-list-tile-content>
+                                <v-list-tile-title>
+                                    {{ item.text }}
+                                </v-list-tile-title>
+                            </v-list-tile-content>
+                        </v-list-tile>
+
+                        <v-list-tile
+                                v-for="(child, i) in item.children"
+                                :key="i"
+                        >
+                            <router-link :to="`/posts\?category=`+ child.text">
+                                <v-list-tile-action v-if="child.icon">
+                                    <v-icon>{{ child.icon }}</v-icon>
+                                </v-list-tile-action>
+                                <v-list-tile-content>
+                                    <v-list-tile-title>
+                                        {{ child.text }}
+                                    </v-list-tile-title>
+                                </v-list-tile-content>
+                            </router-link>
+
+                        </v-list-tile>
+
+                    </v-list-group>
+
+                    <router-link :to="{name: item.name}" class="list__tile" v-else>
                         <v-list-tile-action>
                             <v-icon>{{ item.icon }}</v-icon>
                         </v-list-tile-action>
                         <v-list-tile-content>
-                            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                            <v-list-tile-title>
+                                {{ item.text }}
+                            </v-list-tile-title>
                         </v-list-tile-content>
-                    </v-list-tile>
-                </v-list-item>
+                    </router-link>
+
+                </template>
             </v-list>
         </v-navigation-drawer>
-        <v-toolbar fixed dark class="primary">
-            <div class="toolbar__content">
-                <v-toolbar-side-icon @click.native.stop="drawer = !drawer" class="white--text"></v-toolbar-side-icon>
-                <v-toolbar-title class="white--text">{{title}}</v-toolbar-title>
-            </div>
-        </v-toolbar>
+
     </header>
 </template>
 <script>
+    import loginModal from './Modal-login.vue';
     export default {
         data () {
             return {
                 drawer: null,
+                modal:false,
+                modal2:false,
                 items: [
-                    { title: 'Home', icon: 'dashboard' },
-                    { title: 'About', icon: 'question_answer' }
+                    { icon: 'home', text: 'Home', name: 'posts' },
+                    {
+                        icon: 'keyboard_arrow_up',
+                        'icon-alt': 'keyboard_arrow_down',
+                        text: 'Categories' ,
+                        model: false,
+                        children: [
+                            { text: 'All' },
+                            { text: 'Business' },
+                            { text: 'Leisure' },
+                            { text: 'Work' },
+                            { text: 'Not categorized' }
+                        ]
+                    },
+                    { icon: 'contacts', text: 'Contacts', name: 'contacts' }
                 ],
                 mini: false,
                 right: true
             }
         },
         computed: {
+            login() {
+                return this.$store.getters.getLogin;
+            },
             title() {
                 return this.$store.getters.getTitle;
             }
         },
-        mounted: () => {
+        components: {
+            loginModal
+        },
+        methods: {
+            logout() {
+                this.$store.dispatch('logout');
+            }
         }
     }
 </script>
 <style>
+    .toolbar__content{
+
+    }
     header{
-        padding-bottom: 80px;
+        padding-bottom: 40px;
+    }
+    @media screen and (max-width: 768px) {
+        header{
+            padding-bottom: 20px;
+        }
     }
 </style>

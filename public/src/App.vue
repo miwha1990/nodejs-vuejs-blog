@@ -16,6 +16,7 @@
         appBreadcrums: Breadcrumbs
       },
       created() {
+        this.$store.dispatch('authenticate');
         this.$store.commit("SET_ROUTE", this.$route);
       }
   }

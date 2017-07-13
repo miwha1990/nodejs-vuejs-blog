@@ -9,7 +9,6 @@
                             <router-link :to="`/posts\?category=`+ cat">
                                 <v-list-tile-title v-html="cat"></v-list-tile-title>
                             </router-link>
-                            <!--<v-list-tile-title v-html="cat" v-on:click="filter(cat)"></v-list-tile-title>-->
                          </v-list-tile-content>
                     </v-list-tile>
                 </template>

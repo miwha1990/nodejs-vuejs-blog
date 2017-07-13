@@ -6,9 +6,6 @@
                     <v-layout row wrap>
 
                         <v-flex xs12 sm12>
-                            <v-text-field type="text" v-model="form.author" label="Name"></v-text-field>
-                        </v-flex>
-                        <v-flex xs12 sm12>
                             <v-text-field multi-line v-model="form.text" label="Comment"></v-text-field>
                         </v-flex>
                         <div class="text-xs-center">
@@ -27,13 +24,16 @@
             return {
                 form: {
                     post_id: this.$store.getters.getPostId,
-                    author: '',
                     text: ''
                 }
             }
         },
+        computed: {
+            login(){return this.$store.getters.getLogin;}
+        },
         methods: {
             submitData: function(event) {
+                this.form.author = this.login;
                 event.preventDefault();
                 this.$store.dispatch('postComment', {url: 'http://localhost:8000/api/comments/', data:this.form});
             }

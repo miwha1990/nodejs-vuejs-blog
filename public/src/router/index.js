@@ -11,6 +11,7 @@ export default new Router({
   routes: [
       { path: '/', redirect: '/posts' },
       { path: '*', template: 'Not found' },
+      { path: '/contacts', name: 'contacts'},
       {
           path : '/posts',
           component: Posts,

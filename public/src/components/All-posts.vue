@@ -1,7 +1,7 @@
 <template>
     <v-container>
-        <v-layout row wrapclass="post_list">
-            <v-flex xs12 md7 offset-md1>
+        <v-layout row wrap wrapclass="post_list">
+            <v-flex sm12 md7 offset-md1>
                 <div class="no_posts" v-if="!posts.length">
                     <h4 class="deep-orange--text text--lighten-2 text-xs-center">Sorry! No posts yet!</h4>
                 </div>
@@ -45,12 +45,12 @@
                     </v-layout>
                 </v-card>
             </v-flex>
-            <v-flex md3 class="sidebar">
+            <v-flex sm12 md3  class="sidebar">
                 <sidebar></sidebar>
             </v-flex>
         </v-layout>
         <app-pagination :limit="postPerPage" :page="pageIndex" v-on:updatePageIndex="changePage"></app-pagination>
-        <app-modal></app-modal>
+        <app-modal v-if="logged"></app-modal>
     </v-container>
 </template>
 <script>
@@ -61,9 +61,10 @@
         data() {
             return {
                 pageIndex:0,
-                postPerPage:4,
+                postPerPage:4
             }
         },
+
         beforeRouteEnter (to, from, next) {
             const category = to.query.category;
             next(vm => {
@@ -87,6 +88,9 @@
         computed: {
             posts() {
                 return this.$store.getters.getPosts;
+            },
+            logged() {
+                return this.$store.getters.getLogin;
             }
         },
         methods: {
@@ -106,7 +110,6 @@
                 const category = cat ? '&category='+cat : '';
                 const category_count = cat ? '?category='+cat : '';
                 const url = `http://localhost:8000/api/posts?page=${this.pageIndex}&limit=${this.postPerPage}${category}`;
-                console.log(url);
 
                 this.$http.get(
                     'http://localhost:8000/api/posts/count_all'+category_count

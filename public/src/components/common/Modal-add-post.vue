@@ -1,8 +1,5 @@
 <template>
     <v-layout row justify-center>
-        <v-alert success dismissible v-model="alert">
-            Post Created
-        </v-alert>
         <v-dialog v-model="dialog" persistent width="768px">
             <v-btn fab large class="deep-orange lighten-2 white--text btn--floating" light id="add_button" slot="activator">
                 <span class="white--text">
@@ -15,10 +12,9 @@
                 </v-card-title>
                 <v-card-text>
                     <v-text-field label="Title" v-model="form.title" required></v-text-field>
-                    <v-text-field label="Author" v-model="form.author" required></v-text-field>
                     <v-text-field label="Content" v-model="form.content" multi-line required></v-text-field>
                     <v-layout row wrap>
-                        <v-flex xs6>
+                        <v-flex xs12 sm6>
                             <v-menu
                                     lazy
                                     :close-on-content-click="false"
@@ -40,7 +36,7 @@
                                 <v-date-picker v-model="form.date" landscape></v-date-picker>
                             </v-menu>
                         </v-flex>
-                        <v-flex xs6>
+                        <v-flex xs12 sm6>
                             <v-select
                                     v-model="form.category"
                                     label="Category"
@@ -61,6 +57,9 @@
                     <v-btn class="blue--text darken-1" v:bind:type="submit" type="submit" flat @click.native="submitForm">Save</v-btn>
                 </div>
             </v-card>
+            <v-alert class="green" dismissible transition="scale-transition" v-model="alert">
+                Post Created
+            </v-alert>
         </v-dialog>
     </v-layout>
 </template>
@@ -79,6 +78,9 @@
         components : {
             InputFile
         },
+        computed: {
+            login(){return this.$store.getters.getLogin;}
+        },
         methods: {
             fileSelectedFunc(e) {
                 this.form.imageUrl = e;
@@ -96,11 +98,9 @@
                     .catch(this.onError.bind(this));
             },
             onComplete(e){
-                console.log(e);
                 this.alert = true;
                 this.$store.commit('ADD_POST', e.body);
-                setTimeout(()=> this.alert = false, 2000);
-                this.dialog = false;
+                setTimeout(()=> {this.dialog = false;this.alert = false}, 1500);
             },
             onError(e) {
                 console.error(e)

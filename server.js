@@ -29,13 +29,17 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use('/', express.static(__dirname + '/public'));
-
+app.components = {};
 //controllers
 const PostController = require('./api/controllers/posts');
 const CommentController = require('./api/controllers/comments');
+const userComponent = require('./api/components/user');
+const auth = require('./api/components/auth');
 
 PostController(app);
+userComponent(app);
 routes(app);
+auth(app);
 
 app.get('/api', (req, res, next) => {
     res.send('API is running');

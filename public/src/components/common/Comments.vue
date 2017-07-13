@@ -1,13 +1,23 @@
 <template>
     <section>
-        <app-comment-form></app-comment-form>
+        <h5>Comments</h5>
+        <app-comment-form v-if="login"></app-comment-form>
         <app-comment-list></app-comment-list>
     </section>
 </template>
 <script>
     import commentList from './Comment-List.vue';
     import commentForm from './Comment-Form.vue';
+
     export default {
+        data() {
+            return {
+
+            }
+        },
+        computed: {
+          login(){return this.$store.getters.getLogin;}
+        },
         components: {
             appCommentList: commentList,
             appCommentForm: commentForm
