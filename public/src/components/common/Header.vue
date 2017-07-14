@@ -6,25 +6,27 @@
                     <v-toolbar-side-icon @click.native.stop="drawer = !drawer" class="white--text hidden-md-and-up"></v-toolbar-side-icon>
                     <v-toolbar-title class="white--text">{{title}}</v-toolbar-title>
                     <v-toolbar-items class="hidden-sm-and-down">
-                        <v-btn flat v-for="item in items" :key="item">
-                            <v-menu :nudge-width="100" v-if="item.children">
-                                <v-list-tile-title slot="activator">
-                                    <span style="vertical-align: middle" class="white--text">{{item.text}}</span>
-                                    <v-icon dark  class="white--text">arrow_drop_down</v-icon>
-                                </v-list-tile-title>
-                                <v-list>
-                                    <v-list-tile v-for="im in item.children" :key="im">
-                                        <router-link :to="`/posts\?category=`+ im.text">
-                                            <v-list-tile-title v-html="im.text"></v-list-tile-title>
-                                        </router-link>
-                                    </v-list-tile>
-                                </v-list>
-                            </v-menu>
-                            <router-link  class="white--text" :to="{name: item.name}" v-else >
+                        <span id="menu_list" v-for="item in items" :key="item">
+                            <v-btn flat v-if="item.children">
+                                <v-menu :nudge-width="100">
+                                    <v-list-tile-title slot="activator">
+                                        <span style="vertical-align: middle" class="white--text">{{item.text}}</span>
+                                        <v-icon dark  class="white--text">arrow_drop_down</v-icon>
+                                    </v-list-tile-title>
+                                    <v-list>
+                                        <v-list-tile v-for="im in item.children" :key="im">
+                                            <router-link :to="`/posts\?category=`+ im.text">
+                                                <v-list-tile-title v-html="im.text"></v-list-tile-title>
+                                            </router-link>
+                                        </v-list-tile>
+                                    </v-list>
+                                </v-menu>
+                            </v-btn>
+
+                            <router-link :to="{name: item.name}" class="btn btn--dark btn--flat" tag="button" v-else>
                                 {{item.text}}
                             </router-link>
-                        </v-btn>
-
+                        </span>
                     </v-toolbar-items>
                     <v-spacer></v-spacer>
                     <v-toolbar-items  class="hidden-sm-and-down">
@@ -191,11 +193,20 @@
     }
 </script>
 <style>
+    #menu_list button{
+        margin:0;
+        color:white;
+        width: 100%;
+        height:100%;
+    }
     .toolbar__content{
 
     }
     header{
         padding-bottom: 40px;
+    }
+    header a{
+        text-decoration: none;
     }
     @media screen and (max-width: 768px) {
         header{

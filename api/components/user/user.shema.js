@@ -17,7 +17,7 @@ const UserSchema = new Schema({
     email: {
       type: String,
       // required: true,
-      unique: true
+      // unique: true
     },
     password: {
         type: String,
@@ -28,6 +28,19 @@ const UserSchema = new Schema({
         type: String,
         enum: ['Client', 'Manager', 'Admin'],
         default: 'Client'
+    },
+    google           : {
+        id           : String,
+        token        : String,
+        email        : String,
+        name         : String
+    },
+    twitter          : {
+        id           : String,
+        token        : String,
+        displayName  : String,
+        username     : String,
+        imageUrl     : String
     },
     facebook         : {
         id           : String,

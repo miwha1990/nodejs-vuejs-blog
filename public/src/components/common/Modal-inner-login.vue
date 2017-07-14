@@ -22,16 +22,24 @@
                     :type="showPassword ? 'password' : 'text'"
                     required
             ></v-text-field>
-            <v-btn
-                    class="ma-3 facebook"
-                    primary
-                    dark
-                    @click.native="faceLog"
-            >
+            <v-menu :nudge-width="100">
+                <v-list-tile-title slot="activator">
+                    <span style="vertical-align: middle" >Log via socials</span>
+                    <v-icon dark >arrow_drop_down</v-icon>
+                </v-list-tile-title>
+                <v-list>
+                    <v-list-tile >
+                        <a href="http://localhost:8000/auth/facebook" class="pa-2 facebook primary ma-3 btn btn--dark">Facebook</a>
+                    </v-list-tile>
+                    <v-list-tile >
+                        <a href="http://localhost:8000/auth/google" class="pa-2 facebook error ma-3 btn btn--dark">Google</a>
+                    </v-list-tile>
+                    <v-list-tile >
+                        <a href="http://localhost:8000/auth/twitter" class="pa-2 facebook info ma-3 btn btn--dark">Twitter</a>
+                    </v-list-tile>
+                </v-list>
+            </v-menu>
 
-                Via Facebook
-            </v-btn>
-            <a href="http://localhost:8000/auth/facebook">LOOOOOG</a>
             <v-btn
                     success
                     :loading="loading"

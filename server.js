@@ -2,6 +2,8 @@ const express = require('express'),
     app = express(),
     mongoose = require('mongoose'),
     bodyParser = require('body-parser'),
+    session = require('express-session'),
+    passport = require('passport'),
     routes = require('./api/routes'),
     port = process.env.PORT || 8000;
 
@@ -27,7 +29,14 @@ app.use(bodyParser.urlencoded({
     extended: true,
     parameterLimit:50000
 }));
-
+app.use(session({
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {  }
+}));
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
 app.use('/', express.static(__dirname + '/public'));
 app.components = {};
 //controllers
