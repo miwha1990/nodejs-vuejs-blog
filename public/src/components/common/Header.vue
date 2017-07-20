@@ -30,6 +30,9 @@
                     </v-toolbar-items>
                     <v-spacer></v-spacer>
                     <v-toolbar-items  class="hidden-sm-and-down">
+                        <router-link :to="{name: 'chat'}" class="btn btn--flat white--text" tag="button" v-if="login">
+                            <v-icon class="white--text">question_answer</v-icon> chat
+                        </router-link>
                         <v-btn flat v-if="login">
                             <v-menu :nudge-width="100">
                                 <span slot="activator">

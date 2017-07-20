@@ -51,6 +51,44 @@ routes(app);
 auth(app);
 
 app.get('/api', (req, res, next) => {
+    console.log(io.sockets.adapter);
     res.send('API is running');
 });
-app.listen(port, () => console.log(`API server started on: http://localhost:${port}/api`));
+const server = app.listen(port, () => console.log(`API server started on: http://localhost:${port}/api`));
+const io = require('socket.io')(server);
+app.get('/onlineUsers', (req,res,next) => {res.send(people)});
+const people = {};
+io.on('connection', (socket) => {
+
+    // io.emit('Joined', socket.id); //tell all that someone connected
+
+
+    socket.on("join", function(name){
+        console.log('1st name', name);
+        if(!people[socket.id]){
+            people[socket.id] = name;
+        }
+        io.emit('Onlines', people);
+        socket.emit("update", "You have connected to the server.");
+        console.log('people', people);
+        io.sockets.emit("update_people", people);
+        io.sockets.emit("Joined", name, socket.id);
+    });
+
+    socket.on('chat.message', message => {
+        io.emit('chat_message', message);
+    });
+
+    socket.on('user.typing', userId => {
+       io.emit('Typing', userId);
+    });
+
+    socket.on('stop.typing', userId => {
+        io.emit('StopTyping', userId);
+    });
+
+    socket.on('disconnect', () => {
+        socket.broadcast.emit('Left',people[socket.id],socket.id);
+        delete people[socket.id];
+    })//tell all that someone disconnected
+});

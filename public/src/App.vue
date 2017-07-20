@@ -1,7 +1,6 @@
 <template>
   <v-app id="main">
     <app-header></app-header>
-    <app-breadcrums></app-breadcrums>
     <router-view :key="$route.fullPath"></router-view>
   </v-app>
 </template>
@@ -16,7 +15,7 @@
         appBreadcrums: Breadcrumbs
       },
       created() {
-        this.$store.dispatch('authenticate');
+        this.$store.dispatch('authenticate').then(()=>console.log('reeady'));
         this.$store.commit("SET_ROUTE", this.$route);
       }
   }
