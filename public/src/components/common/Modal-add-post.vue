@@ -86,6 +86,7 @@
                 this.form.imageUrl = e;
             },
             submitForm(e) {
+                console.log(this.form);
                 e.preventDefault();
                 const formData = new FormData();
                 Object.entries(this.form).forEach(e => {

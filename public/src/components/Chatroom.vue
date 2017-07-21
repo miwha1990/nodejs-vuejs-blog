@@ -143,7 +143,11 @@
             chat_message(message) {
                 this.messages.push(message);
                 const div = document.getElementsByClassName('chat-content')[0];
-                div.scrollTop = div.scrollHeight;
+                let a_height = 0;
+                if(div.getElementsByClassName('list__tile')[0]) {
+                    a_height = div.getElementsByClassName('list__tile')[0].scrollHeight;
+                }
+                setTimeout(()=>{ div.scrollTop = div.scrollHeight + a_height;},100)
             },
             update_people(users) {
                 this.connectedUsers = users;

@@ -11,7 +11,8 @@ export default new Vuex.Store({
         comments:'',
         route: '',
         totalItems:0,
-        login:false
+        login:false,
+        avatar:false
      },
      mutations: {
          CHANGE_TITLE(state, payload) {
@@ -40,6 +41,9 @@ export default new Vuex.Store({
          },
          CHANGE_LOGIN_STATE(state, switcher) {
              state.login = switcher;
+         },
+         CHANGE_AVATAR_STATE(state, switcher) {
+             state.avatar = switcher;
          }
      },
      getters: {
@@ -63,6 +67,9 @@ export default new Vuex.Store({
          },
          getLogin(state) {
              return state.login
+         },
+         getAvatar(state) {
+             return state.avatar
          }
      },
      actions: {
@@ -124,6 +131,7 @@ export default new Vuex.Store({
                      }})
                      .then((response)=>{
                          context.commit("CHANGE_LOGIN_STATE", response.body.data.firstName);
+                         context.commit("CHANGE_AVATAR_STATE", response.body.data.avatar);
                          return response.body;
                      })
                      .catch(err => err);

@@ -42,6 +42,18 @@
                     :type="'text'"
                     required
             ></v-text-field>
+            <div class="avatar_input">
+                <VueImgInputer
+                        v-model="form.file"
+                        theme="light"
+                        size="small"
+                        accept=""
+                        name="avatar"
+                        bottomText="Select another image"
+                        placeholder="Select your avatar"
+                ></VueImgInputer>
+            </div>
+            <br>
             <v-btn
                     success
                     :loading="loading"
@@ -56,9 +68,11 @@
     </div>
 </template>
 <script>
+import VueImgInputer from 'vue-img-inputer';
     export default {
         data() {
             return {
+                file:null,
                 form: {},
                 showPassword: true,
                 loader: null,
@@ -70,7 +84,13 @@
                 return this.$store.getters.getLogin;
             }
         },
+        components: {
+            VueImgInputer
+        },
         methods: {
+            showSuccess(file) {
+                this.form.file = file;
+            },
             submit() {
                 if(this.form.password === this.form.password2){
                     this.loader = 'loading';
@@ -80,16 +100,47 @@
                     this[l] = !vm[l];
 
                     data.data = vm.form;
-                    data.url = 'http://localhost:8000/api/users';
-                    vm.$store.dispatch('register', data).then(res=>{
-                        if(res.success) {
-                            vm.$emit('alertMessage', {msg: res.msg, color: res.success});
-                        }
-                        vm[l] = false;
+                    data.url = 'http://localhost:8000/api/add-new-user';
+                    console.log(data.data);
+                    /*const formData = new FormData();
+
+                    Object.entries(data.data).forEach(e => {
+                        formData.append(e[0], e[1]);
                     });
+
+                    this
+                        .$http.post(data.url, formData)
+                        .then((res)=>{
+                            if(res.success) {
+                                vm.$emit('alertMessage', {msg: res.msg, color: res.success});
+                            }
+                            vm[l] = false;
+                        })
+                        .catch(e=>console.log(e));*/
+
                     vm.loader = null
                 }
-            }
+            },
+            onChanged() {
+                console.log("New picture loaded");
+                if (this.$refs.pictureInput.file) {
+                    this.image = this.$refs.pictureInput.file;
+                } else {
+                    console.log("Old browser. No support for Filereader API");
+                }
+            },
+            onRemoved() {
+                this.image = '';
+            },
         }
     }
 </script>
+<style>
+    .avatar_input{
+        display: flex;
+        justify-content: center;
+    }
+    .vue-dropzone .dz-image{
+        border-radius:50%;
+    }
+</style>

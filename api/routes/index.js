@@ -32,20 +32,21 @@ module.exports =  (app) => {
     app.route('/api/comments/')
         .post(comments.create_comment);
 
-    //uploads
-    const UPLOAD_PATH = appDir+'/public/static/uploads/posts';
-    const storage = multer.diskStorage({
-        destination: function (req, file, cb) {
-            cb(null, `${UPLOAD_PATH}/`)
-        },
-        filename: function (req, file, cb) {
-            cb(null, Date.now() + '-' + file.originalname);
-        }
-    });
-    const upload = multer({ storage: storage }).single('imageUrl');
+
 
     app.route('/api/posts/new_post')
         .post((req, res) => {
+            //uploads
+            const UPLOAD_PATH = appDir+'/public/static/uploads/posts';
+            const storage = multer.diskStorage({
+                destination: function (req, file, cb) {
+                    cb(null, `${UPLOAD_PATH}/`)
+                },
+                filename: function (req, file, cb) {
+                    cb(null, Date.now() + '-' + file.originalname);
+                }
+            });
+            const upload = multer({ storage: storage }).single('imageUrl');
             upload(req, res, function (err) {
                 if (err) {
                     res.status(400).json(prepareResp(0, 'Error!', err));
@@ -66,6 +67,7 @@ module.exports =  (app) => {
                 });
             })
         });
+
 
     return router;
 };

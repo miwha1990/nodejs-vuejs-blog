@@ -63,6 +63,7 @@
                                 <v-list-tile-content>
                                     <v-menu :nudge-width="100">
                                         <span slot="activator">
+                                            {{avatar}}
                                             <span style="vertical-align: middle">Hello, {{login}}!</span>
                                             <v-icon dark>arrow_drop_down</v-icon>
                                         </span>
@@ -183,6 +184,9 @@
             },
             title() {
                 return this.$store.getters.getTitle;
+            },
+            avatar() {
+                return this.$store.getters.getAvatar;
             }
         },
         components: {
