@@ -88,7 +88,8 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        socket.broadcast.emit('Left',people[socket.id],socket.id);
+        const data = JSON.stringify({name:people[socket.id], socketId: socket.id});
+        socket.broadcast.emit('Left', data);
         delete people[socket.id];
     })//tell all that someone disconnected
 });

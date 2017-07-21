@@ -106,6 +106,7 @@
     </v-app>
 </template>
 <script>
+
     export default {
         data(){
             return {
@@ -137,14 +138,14 @@
         },
         sockets:{
             Onlines(users){
-                console.log('online users', users);
                 this.connectedUsers = users;
             },
             chat_message(message) {
                 this.messages.push(message);
+                const div = document.getElementsByClassName('chat-content')[0];
+                div.scrollTop = div.scrollHeight;
             },
             update_people(users) {
-                console.log('update users', users);
                 this.connectedUsers = users;
             },
             Joined(name, socketId){
@@ -167,19 +168,19 @@
                     this.areTyping.splice(index, 1);
                 }
             },
-            Left(name, socketId) {
-                console.log('connnect',this.connectedUsers);
-                console.log('con',this.conUsers);
-                console.log(this.connectedUsers);
-                if(this.connectedUsers.__ob__.value[socketId]) {
-                    console.lg('inside')
-                    delete this.connectedUsers.__ob__.value[socketId];
+            Left(socketObject) {
+                const socket_Object = JSON.parse(socketObject);
+                const newConnected = JSON.parse(JSON.stringify(this.connectedUsers));
+                if(newConnected[socket_Object.socketId]) {
+                    delete newConnected[socket_Object.socketId];
                     const now = new Date();
                     this.infoMessage.type = 'info';
-                    this.infoMessage.info ='<i class="red--text">User <b >'+name+'</b> has left.</i>';
+                    this.infoMessage.info ='<i class="red--text">User <b >'+socket_Object.name+'</b> has left.</i>';
                     this.infoMessage.timestamp = now.getHours()+':'+now.getMinutes()+' '+now.getDate()+'-'+now.getMonth()+'-'+now.getFullYear();
                     this.$socket.emit('chat.message', this.infoMessage);
+                    this.connectedUsers = newConnected;
                 }
+
             }
         },
         created() {
