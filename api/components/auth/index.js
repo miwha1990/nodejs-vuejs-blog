@@ -34,7 +34,6 @@ module.exports = function(app) {
           opts.secretOrKey = 'secret';
 
     passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
-        console.log('here we go', jwt_payload);
         User.findById(jwt_payload.user, done)
     }));
 

@@ -6,7 +6,7 @@
                     <v-toolbar-side-icon @click.native.stop="drawer = !drawer" class="white--text hidden-md-and-up"></v-toolbar-side-icon>
                     <v-toolbar-title class="white--text">{{title}}</v-toolbar-title>
                     <v-toolbar-items class="hidden-sm-and-down">
-                        <span id="menu_list" v-for="item in items" :key="item">
+                        <span id="menu_list" v-for="(item, index) in items" :key="index">
                             <v-btn flat v-if="item.children">
                                 <v-menu :nudge-width="100">
                                     <v-list-tile-title slot="activator">
@@ -14,7 +14,7 @@
                                         <v-icon dark  class="white--text">arrow_drop_down</v-icon>
                                     </v-list-tile-title>
                                     <v-list>
-                                        <v-list-tile v-for="im in item.children" :key="im">
+                                        <v-list-tile v-for="(im, ind) in item.children" :key="ind">
                                             <router-link :to="`/posts\?category=`+ im.text">
                                                 <v-list-tile-title v-html="im.text"></v-list-tile-title>
                                             </router-link>
@@ -33,19 +33,29 @@
                         <router-link :to="{name: 'chat'}" class="btn btn--flat white--text" tag="button" v-if="login">
                             <v-icon class="white--text">question_answer</v-icon> chat
                         </router-link>
-                        <v-btn flat v-if="login">
-                            <v-menu :nudge-width="100">
-                                <span slot="activator">
-                                    <span style="vertical-align: middle" class="white--text">Hello, {{login}}!</span>
-                                    <v-icon dark  class="white--text">arrow_drop_down</v-icon>
-                                </span>
-                                <v-list>
-                                    <v-list-tile>
-                                        <v-list-tile-title v-on:click="logout"><v-icon>lock_open</v-icon>&nbsp;Logout</v-list-tile-title>
-                                    </v-list-tile>
-                                </v-list>
-                            </v-menu>
-                        </v-btn>
+                        <v-menu v-if="login">
+                            <span slot="activator">
+                                <v-list-tile class="white--text" dark>
+                                    <v-list-tile-avatar class="white--text">
+                                         <img :src="avatar || './static/no-avatar.png'">
+                                    </v-list-tile-avatar>
+                                    <v-list-tile-content>
+                                        <v-list-tile-sub-title  class="white--text">
+                                            <span style="vertical-align: middle" class="white--text">Hello, {{login}}!</span>
+                                            <v-icon dark  class="white--text">arrow_drop_down</v-icon>
+                                        </v-list-tile-sub-title>
+                                    </v-list-tile-content>
+                                </v-list-tile>
+                            </span>
+                            <v-list>
+                                <v-list-tile>
+                                    <v-list-tile-title v-on:click="logout"><v-icon>lock_open</v-icon>&nbsp;Logout</v-list-tile-title>
+                                </v-list-tile>
+                                <v-list-tile>
+                                  <v-icon>settings</v-icon>&nbsp;<v-list-tile-title>Settings</v-list-tile-title>
+                                </v-list-tile>
+                            </v-list>
+                        </v-menu>
                         <v-btn class="deep-orange lighten-2 white--text" @click.native.stop="modal = !modal;" flat v-else>
                             <v-icon class="white--text">input</v-icon>&nbsp;&nbsp;&nbsp;
                             <login-modal :modal="modal"></login-modal>
@@ -60,16 +70,21 @@
                     <v-flex xs10>
                         <v-list-item v-if="login">
                             <v-list-tile avatar tag="div">
+                                <v-list-tile-avatar>
+                                    <img :src="avatar || './static/no-avatar.png'" />
+                                </v-list-tile-avatar>
                                 <v-list-tile-content>
                                     <v-menu :nudge-width="100">
                                         <span slot="activator">
-                                            {{avatar}}
                                             <span style="vertical-align: middle">Hello, {{login}}!</span>
                                             <v-icon dark>arrow_drop_down</v-icon>
                                         </span>
                                         <v-list>
                                             <v-list-tile>
                                                 <v-icon>lock_open</v-icon>&nbsp;<v-list-tile-title v-on:click="logout">Logout</v-list-tile-title>
+                                            </v-list-tile>
+                                            <v-list-tile>
+                                                <v-icon>settings</v-icon>&nbsp;<v-list-tile-title>Settings</v-list-tile-title>
                                             </v-list-tile>
                                         </v-list>
                                     </v-menu>

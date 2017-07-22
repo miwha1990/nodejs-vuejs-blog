@@ -50,8 +50,7 @@ userComponent(app);
 routes(app);
 auth(app);
 
-app.get('/api', (req, res, next) => {
-    console.log(io.sockets.adapter);
+app.get('/api', (req, res) => {
     res.send('API is running');
 });
 const server = app.listen(port, () => console.log(`API server started on: http://localhost:${port}/api`));
@@ -60,18 +59,12 @@ app.get('/onlineUsers', (req,res,next) => {res.send(people)});
 const people = {};
 io.on('connection', (socket) => {
 
-    // io.emit('Joined', socket.id); //tell all that someone connected
+    socket.on("join", function(name, avatar){
 
-
-    socket.on("join", function(name){
-        console.log('1st name', name);
         if(!people[socket.id]){
-            people[socket.id] = name;
+            people[socket.id] = {name:name, avatar:avatar};
         }
-        io.emit('Onlines', people);
-        socket.emit("update", "You have connected to the server.");
-        console.log('people', people);
-        io.sockets.emit("update_people", people);
+        io.sockets.emit("online_people", people);
         io.sockets.emit("Joined", name, socket.id);
     });
 
@@ -88,8 +81,10 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        const data = JSON.stringify({name:people[socket.id], socketId: socket.id});
-        socket.broadcast.emit('Left', data);
-        delete people[socket.id];
+        if(people[socket.id]) {
+            const data = JSON.stringify({name:people[socket.id].name, socketId: socket.id});
+            socket.broadcast.emit('Left', data);
+            delete people[socket.id];
+        }
     })//tell all that someone disconnected
 });

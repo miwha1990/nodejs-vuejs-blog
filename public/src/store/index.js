@@ -9,7 +9,6 @@ export default new Vuex.Store({
         posts:[],
         postId:'',
         comments:'',
-        route: '',
         totalItems:0,
         login:false,
         avatar:false
@@ -33,9 +32,6 @@ export default new Vuex.Store({
          ADD_COMMENT(state, comment) {
              state.comments.unshift(comment.body.data);
          },
-         SET_ROUTE(state, route) {
-             state.route = route;
-         },
          SET_TOTAL_ITEMS(state, total) {
              state.totalItems = total;
          },
@@ -58,9 +54,6 @@ export default new Vuex.Store({
          },
          getPostId(state) {
              return state.postId;
-         },
-         getRoute(state) {
-             return state.route;
          },
          getTotalItems(state) {
              return state.totalItems;
@@ -125,7 +118,7 @@ export default new Vuex.Store({
          authenticate(context) {
              const token = Vue.cookie.get('token');
              if(token) {
-                 Vue.http.get('http://localhost:8000/me/', {
+                 return Vue.http.get('http://localhost:8000/me/', {
                      headers: {
                          Authorization: `JWT ${token}`
                      }})

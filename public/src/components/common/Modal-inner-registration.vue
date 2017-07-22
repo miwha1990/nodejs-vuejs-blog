@@ -48,7 +48,7 @@
                         theme="light"
                         size="small"
                         accept=""
-                        name="avatar"
+                        name="file"
                         bottomText="Select another image"
                         placeholder="Select your avatar"
                 ></VueImgInputer>
@@ -88,9 +88,6 @@ import VueImgInputer from 'vue-img-inputer';
             VueImgInputer
         },
         methods: {
-            showSuccess(file) {
-                this.form.file = file;
-            },
             submit() {
                 if(this.form.password === this.form.password2){
                     this.loader = 'loading';
@@ -100,9 +97,9 @@ import VueImgInputer from 'vue-img-inputer';
                     this[l] = !vm[l];
 
                     data.data = vm.form;
-                    data.url = 'http://localhost:8000/api/add-new-user';
-                    console.log(data.data);
-                    /*const formData = new FormData();
+                    data.url = 'http://localhost:8000/api/new-users/add';
+
+                    const formData = new FormData();
 
                     Object.entries(data.data).forEach(e => {
                         formData.append(e[0], e[1]);
@@ -116,22 +113,11 @@ import VueImgInputer from 'vue-img-inputer';
                             }
                             vm[l] = false;
                         })
-                        .catch(e=>console.log(e));*/
+                        .catch(e=>console.log(e));
 
                     vm.loader = null
                 }
-            },
-            onChanged() {
-                console.log("New picture loaded");
-                if (this.$refs.pictureInput.file) {
-                    this.image = this.$refs.pictureInput.file;
-                } else {
-                    console.log("Old browser. No support for Filereader API");
-                }
-            },
-            onRemoved() {
-                this.image = '';
-            },
+            }
         }
     }
 </script>

@@ -24,12 +24,11 @@
                 <v-divider dark></v-divider>
                 <v-list>
                     <v-list-tile v-for="(value, k, index) in connectedUsers" :key="index" avatar>
-
                         <v-list-tile-avatar>
-                            <img :src="'https://randomuser.me/api/portraits/men/22.jpg'" alt="">
+                            <img :src="value.avatar || './static/no-avatar.png'" alt="avatar">
                         </v-list-tile-avatar>
                         <v-list-tile-title class="online_users">
-                            <span v-text="value"></span>&nbsp;<span v-if="userIsTyping(k)"><v-icon>create</v-icon>...</span>
+                            <span v-text="value.name"></span>&nbsp;<span v-if="userIsTyping(k)"><v-icon>create</v-icon>...</span>
                         </v-list-tile-title>
 
                     </v-list-tile>
@@ -67,9 +66,9 @@
                                                 <v-list-tile-action-text>{{ msg.timestamp }}</v-list-tile-action-text>
                                             </v-list-tile-action>
                                         </v-list-tile>
-                                        <v-list-tile avatar v-bind:key="index"v-if="msg.type==='chat'">
+                                        <v-list-tile avatar v-bind:key="index" v-if="msg.type==='chat'">
                                             <v-list-tile-avatar>
-                                                <img v-bind:src="'https://randomuser.me/api/portraits/men/28.jpg'">
+                                                <img v-bind:src="msg.avatar || './static/no-avatar.png'">
                                             </v-list-tile-avatar>
                                             <v-list-tile-content>
                                                 <v-list-tile-title v-html="msg.user"></v-list-tile-title>
@@ -117,6 +116,7 @@
                     msg: '',
                     type: '',
                     action: '',
+                    avatar: null,
                     user: this.$store.getters.getLogin,
                     text: '',
                     timestamp: ''
@@ -131,14 +131,9 @@
                 drawer: true
             }
         },
-        computed: {
-            conUsers(){
-                return this.connectedUsers;
-            },
-        },
         sockets:{
-            Onlines(users){
-                this.connectedUsers = users;
+            online_people(users) {
+              this.connectedUsers = users;
             },
             chat_message(message) {
                 this.messages.push(message);
@@ -148,9 +143,6 @@
                     a_height = div.getElementsByClassName('list__tile')[0].scrollHeight;
                 }
                 setTimeout(()=>{ div.scrollTop = div.scrollHeight + a_height;},100)
-            },
-            update_people(users) {
-                this.connectedUsers = users;
             },
             Joined(name, socketId){
                 if(!this.userSwitch) {
@@ -196,7 +188,8 @@
                     }})
                     .then((response)=>{
                         const login =  response.body.data.firstName;
-                        this.$socket.emit('join', login);
+                        const avatar =  response.body.data.avatar;
+                        this.$socket.emit('join', login, avatar);
                     })
                     .catch(err => err);
             } else {
@@ -208,6 +201,7 @@
                 if(this.message.text !== '') {
                     const now = new Date();
                     this.message.type = 'chat';
+                    this.message.avatar = this.$store.getters.getAvatar;
                     this.message.timestamp = now.getHours()+':'+now.getMinutes()+' '+now.getDate()+'-'+now.getMonth()+'-'+now.getFullYear();
                     this.$socket.emit('chat.message', this.message);
                     this.message.text ='';

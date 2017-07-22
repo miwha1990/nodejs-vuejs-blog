@@ -15,8 +15,7 @@
         appBreadcrums: Breadcrumbs
       },
       created() {
-        this.$store.dispatch('authenticate').then(()=>console.log('reeady'));
-        this.$store.commit("SET_ROUTE", this.$route);
+        this.$store.dispatch('authenticate');
       }
   }
 </script>

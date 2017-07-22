@@ -33,7 +33,6 @@ module.exports =  (app) => {
         .post(comments.create_comment);
 
 
-
     app.route('/api/posts/new_post')
         .post((req, res) => {
             //uploads

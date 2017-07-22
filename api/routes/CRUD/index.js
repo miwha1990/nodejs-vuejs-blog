@@ -35,8 +35,8 @@ module.exports = (app, Model, pagination) => {
     router.get('/', (req, res, next) => {
         if(pagination){
             const pageOptions = {
-                page: req.query.page || 0,
-                limit: req.query.limit || 10,
+                page: req.query.page*1 || 0,
+                limit: req.query.limit*1 || 10,
                 category: req.query.category || { $gt: [] }
             };
             Model
