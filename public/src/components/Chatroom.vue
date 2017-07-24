@@ -182,7 +182,7 @@
         created() {
             const token = this.$cookie.get('token');
             if(token) {
-                this.$http.get('http://localhost:8000/me/', {
+                this.$http.get(this.$store.state.apiUrl+'/me/', {
                     headers: {
                         Authorization: `JWT ${token}`
                     }})

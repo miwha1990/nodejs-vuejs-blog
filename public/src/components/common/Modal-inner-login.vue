@@ -29,13 +29,13 @@
                 </v-list-tile-title>
                 <v-list>
                     <v-list-tile >
-                        <a href="http://localhost:8000/auth/facebook" class="pa-2 facebook primary ma-3 btn btn--dark">Facebook</a>
+                        <a :href="apiUrl+'http://localhost:8000/auth/facebook'" class="pa-2 facebook primary ma-3 btn btn--dark">Facebook</a>
                     </v-list-tile>
                     <v-list-tile >
-                        <a href="http://localhost:8000/auth/google" class="pa-2 facebook error ma-3 btn btn--dark">Google</a>
+                        <a :href="apiUrl+'http://localhost:8000/auth/google'" class="pa-2 facebook error ma-3 btn btn--dark">Google</a>
                     </v-list-tile>
                     <v-list-tile >
-                        <a href="http://localhost:8000/auth/twitter" class="pa-2 facebook info ma-3 btn btn--dark">Twitter</a>
+                        <a :href="apiUrl+'http://localhost:8000/auth/twitter'" class="pa-2 facebook info ma-3 btn btn--dark">Twitter</a>
                     </v-list-tile>
                 </v-list>
             </v-menu>
@@ -62,12 +62,13 @@
                 showPassword: true,
                 loader: null,
                 loading: false,
+                apiUrl: this.$store.state.apiUrl
             }
         },
         methods: {
             faceLog() {
                 this.$http.get(
-                    'http://localhost:8000/auth/facebook'
+                    this.$store.state.apiUrl+'/auth/facebook'
                 ).then((res) => {
                     console.log(res);
                 });
@@ -80,7 +81,7 @@
                 this[l] = !vm[l];
 
                 data.data = vm.form;
-                data.url = 'http://localhost:8000/auth/login';
+                data.url = this.$store.state.apiUrl+'/auth/login';
                 vm.$store.dispatch('login', data).then(res=>{
                     if(res.success) {
                         vm.$emit('alertMessage', {msg: res.msg, color: res.success, login:true});

@@ -12,6 +12,8 @@ const   mongoose = require('mongoose'),
         authConfig = require('../../config/auth.js'),
         http = require('http');
 
+const config = require('../../config.json');
+
 module.exports = function(app) {
     function prepareResp(success, message, token) {
         return {
@@ -166,7 +168,7 @@ module.exports = function(app) {
     app.get('/auth/twitter/callback',
         passport.authenticate('twitter', { failureRedirect: '/',session: true }),
         function(req, res) {
-             res.redirect('http://localhost:8080/posts/');
+             res.redirect(config.frontUrl+'/posts/');
         });
 
 
@@ -184,7 +186,7 @@ module.exports = function(app) {
     app.get('/auth/google/callback',
         passport.authenticate('google', { failureRedirect: '/' }),
         function(req, res) {
-            res.redirect('http://localhost:8080/posts/');
+            res.redirect(config.frontUrl+'/posts/');
         });
 
     app.get('/auth/facebook', passport.authenticate('facebook', { scope:['email', 'public_profile', 'token']}),  function(req, res) {
@@ -194,13 +196,13 @@ module.exports = function(app) {
     app.get('/auth/facebook/callback',
         passport.authenticate('facebook', { failureRedirect: '/' }),
         function(req, res) {
-            res.redirect('http://localhost:8080');
+            res.redirect(config.frontUrl);
         });
 
 
     app.get('/auth/logout', function(req, res){
         req.logout();
-        res.redirect('http://localhost:8080');
+        res.redirect(config.frontUrl);
     });
     app.post( '/auth/login', function (req, res) {
             User.findOne({email : req.body.email}, function(err, user) {

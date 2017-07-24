@@ -35,7 +35,7 @@
             submitData: function(event) {
                 this.form.author = this.login;
                 event.preventDefault();
-                this.$store.dispatch('postComment', {url: 'http://localhost:8000/api/comments/', data:this.form});
+                this.$store.dispatch('postComment', {url: this.$store.state.apiUrl+'/api/comments/', data:this.form});
             }
         }
     }

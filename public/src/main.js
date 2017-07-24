@@ -10,7 +10,7 @@ import VueSocketio from 'vue-socket.io';
 Vue
     .use(Vuetify)
     .use(VueCookie)
-    .use(VueSocketio, 'http://localhost:8000', store)
+    .use(VueSocketio, store.state.apiUrl, store)
     .use(VueResource);
 
 

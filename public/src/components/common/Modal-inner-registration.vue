@@ -97,7 +97,7 @@ import VueImgInputer from 'vue-img-inputer';
                     this[l] = !vm[l];
 
                     data.data = vm.form;
-                    data.url = 'http://localhost:8000/api/new-users/add';
+                    data.url = this.$store.state.apiUrl+'/api/new-users/add';
 
                     const formData = new FormData();
 

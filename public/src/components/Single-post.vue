@@ -54,7 +54,7 @@
             }
         },
         created(){
-            this.$store.dispatch('fetchPosts', 'http://localhost:8000/api/posts/'+this.$route.params.id);
+            this.$store.dispatch('fetchPosts', this.$store.state.apiUrl +'/api/posts/'+this.$route.params.id);
             this.$store.commit('SET_POST_ID', this.$route.params.id);
         },
         mounted() {

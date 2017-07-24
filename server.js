@@ -8,20 +8,20 @@ const express = require('express'),
     port = process.env.PORT || 8000;
 
 const cors = require('cors');
-
+const config = require('./api/config.json');
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/Blogdb');
 
 // Add headers
 app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+    res.setHeader('Access-Control-Allow-Origin', config.frontUrl);
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
 });
 
-app.use(cors({origin: 'http://localhost:8080'}));
+app.use(cors({origin: config.frontUrl}));
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.json({limit:'100Mb'}));
 app.use(bodyParser.urlencoded({
@@ -37,7 +37,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
-app.use('/', express.static(__dirname + '/public'));
+
 app.components = {};
 //controllers
 const PostController = require('./api/controllers/posts');
@@ -49,7 +49,13 @@ PostController(app);
 userComponent(app);
 routes(app);
 auth(app);
+app.use( express.static( __dirname + '/public/dist' ) );
+app.get('*', function ( req, res) {
+    // uri has a forward slash followed any number of any characters except full stops (up until the end of the string)
 
+        res.sendFile(__dirname + '/public/dist/index.html');
+
+});/*express.static(__dirname + '/public/dist')*/
 app.get('/api', (req, res) => {
     res.send('API is running');
 });

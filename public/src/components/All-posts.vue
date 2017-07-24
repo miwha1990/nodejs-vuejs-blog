@@ -109,10 +109,10 @@
             fetchData (cat) {
                 const category = cat ? '&category='+cat : '';
                 const category_count = cat ? '?category='+cat : '';
-                const url = `http://localhost:8000/api/posts?page=${this.pageIndex}&limit=${this.postPerPage}${category}`;
+                const url = `${this.$store.state.apiUrl}/api/posts?page=${this.pageIndex}&limit=${this.postPerPage}${category}`;
 
                 this.$http.get(
-                    'http://localhost:8000/api/posts/count_all'+category_count
+                    this.$store.state.apiUrl+'/api/posts/count_all'+category_count
                 ).then((res) => {
                     this.$store.commit('SET_TOTAL_ITEMS', res.body.data);
                 });

@@ -38,7 +38,7 @@
                 console.log(this.comments.length);
                 if(this.comments.length > 4) {
                     this.$http.get(
-                        'http://localhost:8000/api/comments/'+this.$store.getters.getPostId+'/'+(++this.page)
+                        this.$store.state.apiUrl+'/api/comments/'+this.$store.getters.getPostId+'/'+(++this.page)
                     ).then((res) => {
                         setTimeout(() => {
                             if (res.body.data.length) {
@@ -58,7 +58,7 @@
             },
         },
         mounted() {
-            this.$store.dispatch('fetchComments', 'http://localhost:8000/api/comments/'+this.$store.getters.getPostId+'/'+this.page);
+            this.$store.dispatch('fetchComments', this.$store.state.apiUrl+'/api/comments/'+this.$store.getters.getPostId+'/'+this.page);
         },
         components: {
             InfiniteLoading,

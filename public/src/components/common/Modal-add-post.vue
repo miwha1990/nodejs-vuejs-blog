@@ -94,7 +94,7 @@
                 });
 
                 this
-                    .$http.post('http://localhost:8000/api/posts/new_post', formData)
+                    .$http.post(this.$store.state.apiUrl+'/api/posts/new_post', formData)
                     .then(this.onComplete.bind(this))
                     .catch(this.onError.bind(this));
             },

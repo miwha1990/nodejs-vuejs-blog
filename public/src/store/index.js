@@ -11,7 +11,8 @@ export default new Vuex.Store({
         comments:'',
         totalItems:0,
         login:false,
-        avatar:false
+        avatar:false,
+        apiUrl:'http://localhost:8000'
      },
      mutations: {
          CHANGE_TITLE(state, payload) {
@@ -67,6 +68,7 @@ export default new Vuex.Store({
      },
      actions: {
          fetchPosts(context, url) {
+
             Vue.http.get(url)
                 .then(async (response)=>{
 
@@ -75,7 +77,7 @@ export default new Vuex.Store({
                         await response.body.data.map(async el => {
 
                              Vue.http
-                                .get('http://localhost:8000/api/comments/' + el._id + '/count_all')
+                                .get(context.state.apiUrl + '/api/comments/' + el._id + '/count_all')
                                 .then(e => {
                                     Vue.set(el, 'comments', e.body.data.length)
                                 });
@@ -116,9 +118,10 @@ export default new Vuex.Store({
                  .catch((err) => {return err});
          },
          authenticate(context) {
+
              const token = Vue.cookie.get('token');
              if(token) {
-                 return Vue.http.get('http://localhost:8000/me/', {
+                 return Vue.http.get(context.state.apiUrl + '/me/', {
                      headers: {
                          Authorization: `JWT ${token}`
                      }})

@@ -37,7 +37,7 @@
                             <span slot="activator">
                                 <v-list-tile class="white--text" dark>
                                     <v-list-tile-avatar class="white--text">
-                                         <img :src="avatar || './static/no-avatar.png'">
+                                         <img :src="avatar || '../static/no-avatar.png'">
                                     </v-list-tile-avatar>
                                     <v-list-tile-content>
                                         <v-list-tile-sub-title  class="white--text">
@@ -71,7 +71,7 @@
                         <v-list-item v-if="login">
                             <v-list-tile avatar tag="div">
                                 <v-list-tile-avatar>
-                                    <img :src="avatar || './static/no-avatar.png'" />
+                                    <img :src="avatar || '../static/no-avatar.png'" />
                                 </v-list-tile-avatar>
                                 <v-list-tile-content>
                                     <v-menu :nudge-width="100">
@@ -234,5 +234,15 @@
         header{
             padding-bottom: 20px;
         }
+    }
+    nav .menu{
+        display: flex;
+        align-items:center
+    }
+    nav .menu .menu__activator>span>a{
+        background-color: transparent !important;
+    }
+    nav .menu:hover{
+        background-color: rgba(255,255,255,0.1);
     }
 </style>
