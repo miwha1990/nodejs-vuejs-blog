@@ -18,7 +18,7 @@
                         </p>
                         <div class="content_part">
                         <span class="article_img" v-if="postData.imageUrl !== 'null'">
-                            <img v-bind:src="postData.imageUrl">
+                            <img v-bind:src="apiUrl+postData.imageUrl">
                         </span>
                         <span class="article_img" v-else>
                             <img src="http://lorempixel.com/380/295/">
@@ -45,6 +45,11 @@
     import CommentsBlock from './common/Comments.vue';
     import Sidebar from './common/Sidebar.vue';
     export default {
+        data() {
+          return {
+              apiUrl:this.$store.state.apiUrl
+          }
+        },
         methods: {
 
         },
@@ -75,6 +80,7 @@
         position: relative;
         float: left;
         margin: 0 20px;
+        overflow: hidden;
     }
     .article_img img{
         width: 100%;

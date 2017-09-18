@@ -108,6 +108,7 @@ import VueImgInputer from 'vue-img-inputer';
                     this
                         .$http.post(data.url, formData)
                         .then((res)=>{
+                            console.log(res);
                             if(res.success) {
                                 vm.$emit('alertMessage', {msg: res.msg, color: res.success});
                             }

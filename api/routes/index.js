@@ -36,7 +36,7 @@ module.exports =  (app) => {
     app.route('/api/posts/new_post')
         .post((req, res) => {
             //uploads
-            const UPLOAD_PATH = appDir+'/public/static/uploads/posts';
+            const UPLOAD_PATH = appDir+'/uploads/posts';
             const storage = multer.diskStorage({
                 destination: function (req, file, cb) {
                     cb(null, `${UPLOAD_PATH}/`)
@@ -54,7 +54,7 @@ module.exports =  (app) => {
 
                 const copy = Object.assign({}, req.body);
                       if(req.file) {
-                          copy.imageUrl = '/static/uploads/posts/'+req.file.filename;
+                          copy.imageUrl = '/posts/'+req.file.filename;
                       }
                 const entity = new post_model(copy);
 

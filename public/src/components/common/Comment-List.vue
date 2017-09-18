@@ -5,7 +5,7 @@
                 <v-list-item v-bind:key="item.id">
                     <v-list-tile avatar>
                         <v-list-tile-avatar v-on:click="onInfinite()">
-                            <img src="../../assets/no-avatar.png">
+                            <img :src="item.avatar || '../static/no-avatar.png'">
                         </v-list-tile-avatar>
                         <v-list-tile-content>
                             <v-list-tile-title v-html="item.author"></v-list-tile-title>
@@ -25,7 +25,7 @@
     export default {
         data() {
             return {
-                page: 0,
+                page: 0
             }
         },
         computed: {
@@ -35,7 +35,7 @@
         },
         methods: {
             onInfinite() {
-                console.log(this.comments.length);
+
                 if(this.comments.length > 4) {
                     this.$http.get(
                         this.$store.state.apiUrl+'/api/comments/'+this.$store.getters.getPostId+'/'+(++this.page)

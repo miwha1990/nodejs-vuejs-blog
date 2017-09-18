@@ -17,7 +17,7 @@ module.exports = function (app, Model) {
 
     router.post('/add', (req, res) => {
             //uploads
-            const UPLOAD_PATH = appDir+'/public/static/uploads/users';
+            const UPLOAD_PATH = appDir+'/uploads/users';
             const storage = multer.diskStorage({
                 destination: function (req, file, cb) {
                     cb(null, `${UPLOAD_PATH}/`)
@@ -35,7 +35,7 @@ module.exports = function (app, Model) {
 
                 const copy = Object.assign({}, req.body);
                 if(req.file) {
-                    copy.avatar = '/static/uploads/users/'+req.file.filename;
+                    copy.avatar = '/users/'+req.file.filename;
                 }
                 const entity = new Model(copy);
 

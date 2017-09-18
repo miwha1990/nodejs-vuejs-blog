@@ -24,6 +24,7 @@
             return {
                 form: {
                     post_id: this.$store.getters.getPostId,
+                    avatar: this.$store.getters.getAvatar,
                     text: ''
                 }
             }

@@ -10,7 +10,7 @@
                         <v-flex xs12 md4 >
 
                             <div class="article_img" v-if="item.imageUrl != null">
-                                <img v-bind:src="item.imageUrl">
+                                <img v-bind:src="apiUrl+item.imageUrl">
                             </div>
                             <div class="article_img" v-else>
                                 <img src="http://lorempixel.com/380/290/">
@@ -61,7 +61,8 @@
         data() {
             return {
                 pageIndex:0,
-                postPerPage:4
+                postPerPage:4,
+                apiUrl:this.$store.state.apiUrl
             }
         },
 

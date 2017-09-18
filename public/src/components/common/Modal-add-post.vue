@@ -78,16 +78,14 @@
         components : {
             InputFile
         },
-        computed: {
-            login(){return this.$store.getters.getLogin;}
-        },
         methods: {
             fileSelectedFunc(e) {
                 this.form.imageUrl = e;
             },
             submitForm(e) {
-                console.log(this.form);
                 e.preventDefault();
+
+                this.form.author = this.$store.getters.getLogin;
                 const formData = new FormData();
                 Object.entries(this.form).forEach(e => {
                     formData.append(e[0], e[1]);

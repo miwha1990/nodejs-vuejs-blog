@@ -3,12 +3,15 @@ const express = require('express'),
     mongoose = require('mongoose'),
     bodyParser = require('body-parser'),
     session = require('express-session'),
+    cors = require('cors'),
     passport = require('passport'),
     routes = require('./api/routes'),
+    path = require('path'),
     port = process.env.PORT || 8000;
 
-const cors = require('cors');
 const config = require('./api/config.json');
+
+//Database
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/Blogdb');
 
@@ -21,7 +24,9 @@ app.use(function (req, res, next) {
     next();
 });
 
+//Cors
 app.use(cors({origin: config.frontUrl}));
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.json({limit:'100Mb'}));
 app.use(bodyParser.urlencoded({
@@ -49,48 +54,19 @@ PostController(app);
 userComponent(app);
 routes(app);
 auth(app);
-app.use( express.static( __dirname + '/public/dist' ) );
-app.get('*', function ( req, res) {
-    // uri has a forward slash followed any number of any characters except full stops (up until the end of the string)
 
-        res.sendFile(__dirname + '/public/dist/index.html');
+app.use( express.static( __dirname + '/uploads' ) );
 
-});/*express.static(__dirname + '/public/dist')*/
 app.get('/api', (req, res) => {
     res.send('API is running');
 });
-const server = app.listen(port, () => console.log(`API server started on: http://localhost:${port}/api`));
-const io = require('socket.io')(server);
-app.get('/onlineUsers', (req,res,next) => {res.send(people)});
-const people = {};
-io.on('connection', (socket) => {
 
-    socket.on("join", function(name, avatar){
-
-        if(!people[socket.id]){
-            people[socket.id] = {name:name, avatar:avatar};
-        }
-        io.sockets.emit("online_people", people);
-        io.sockets.emit("Joined", name, socket.id);
-    });
-
-    socket.on('chat.message', message => {
-        io.emit('chat_message', message);
-    });
-
-    socket.on('user.typing', userId => {
-       io.emit('Typing', userId);
-    });
-
-    socket.on('stop.typing', userId => {
-        io.emit('StopTyping', userId);
-    });
-
-    socket.on('disconnect', () => {
-        if(people[socket.id]) {
-            const data = JSON.stringify({name:people[socket.id].name, socketId: socket.id});
-            socket.broadcast.emit('Left', data);
-            delete people[socket.id];
-        }
-    })//tell all that someone disconnected
+const server = app.listen(port, () => {
+    const address = server.address(),
+     host = address.address,
+     port = address.port;
+     console.error('Server started at %s:%s', host, port);
 });
+
+const sockets = require('./api/sockets');
+sockets(app, server);

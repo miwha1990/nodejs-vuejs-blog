@@ -21,5 +21,6 @@ new Vue({
   component: App,
   render: h => h(App),
   mounted() {
+
   }
 });

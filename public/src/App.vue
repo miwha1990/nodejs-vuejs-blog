@@ -28,7 +28,9 @@
     color: #2c3e50;
     background: rgba(0,0,0,0.07);
   }
-
+  html{
+    overflow: visible;
+  }
   .container{
     width: 80%;
     margin:auto;

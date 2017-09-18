@@ -181,6 +181,7 @@
         },
         created() {
             const token = this.$cookie.get('token');
+            const vm = this;
             if(token) {
                 this.$http.get(this.$store.state.apiUrl+'/me/', {
                     headers: {
@@ -188,7 +189,7 @@
                     }})
                     .then((response)=>{
                         const login =  response.body.data.firstName;
-                        const avatar =  response.body.data.avatar;
+                        const avatar =  response.body.data.avatar?vm.$store.state.apiUrl+response.body.data.avatar:response.body.data.avatar;
                         this.$socket.emit('join', login, avatar);
                     })
                     .catch(err => err);
@@ -235,15 +236,17 @@
 </script>
 <style>
     header {
-        padding-bottom: 0;
+        padding-bottom: 10px !important;
     }
+</style>
+<style scoped>
     .chat-content{
         height: calc(100vh - 132px);
         padding: 20px 20px 5px 20px;
         overflow: auto;
     }
     main{
-        padding-top: 32px;
+        padding-top: 0px;
     }
     main form{
         position: relative;
@@ -274,5 +277,8 @@
     }
     .list__tile__action {
         min-width: 95px;
+    }
+    .navigation-drawer{
+        position: fixed !important;
     }
 </style>

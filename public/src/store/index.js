@@ -12,7 +12,7 @@ export default new Vuex.Store({
         totalItems:0,
         login:false,
         avatar:false,
-        apiUrl:'http://localhost:8000'
+        apiUrl:'https://intense-garden-59155.herokuapp.com'
      },
      mutations: {
          CHANGE_TITLE(state, payload) {
@@ -40,7 +40,12 @@ export default new Vuex.Store({
              state.login = switcher;
          },
          CHANGE_AVATAR_STATE(state, switcher) {
-             state.avatar = switcher;
+             if(switcher) {
+                 state.avatar = state.apiUrl + switcher;
+             } else {
+                 state.avatar = switcher;
+             }
+
          }
      },
      getters: {
